@@ -1,0 +1,1 @@
+{"_id":1,"CanLogon":1,"CanRegister":1,"ServerVersion":1,"RefuseLogonMessage":1001,"RefuseRegisterMessage":1002}

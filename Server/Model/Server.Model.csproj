@@ -1,0 +1,351 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AssemblyName>Model</AssemblyName>
+    <RootNamespace>Model</RootNamespace>
+    <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETCOREAPP2_0;SERVER</DefineConstants>
+    <OutputPath>..\..\Bin\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;RELEASE;NETCOREAPP2_0;SERVER</DefineConstants>
+    <OutputPath>..\..\Bin\</OutputPath>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Libs\**" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Async\AsyncETTaskMethodBuilder.cs">
+      <Link>Common\Base\Async\AsyncETTaskMethodBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Async\AsyncETVoidMethodBuilder.cs">
+      <Link>Common\Base\Async\AsyncETVoidMethodBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Async\ETCancellationTokenSource.cs">
+      <Link>Common\Base\Async\ETCancellationTokenSource.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Async\ETTask.cs">
+      <Link>Common\Base\Async\ETTask.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Async\ETTaskCompletionSource.cs">
+      <Link>Common\Base\Async\ETTaskCompletionSource.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Async\ETTaskFactory.cs">
+      <Link>Common\Base\Async\ETTaskFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Async\ETVoid.cs">
+      <Link>Common\Base\Async\ETVoid.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Async\IAwaiter.cs">
+      <Link>Common\Base\Async\IAwaiter.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Async\MoveNextRunner.cs">
+      <Link>Common\Base\Async\MoveNextRunner.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Helper\MongoHelper.cs">
+      <Link>Common\Base\Helper\MongoHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\IDeserializeSystem.cs">
+      <Link>Common\Base\Base\IDeserializeSystem.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\ProcessHelper.cs">
+      <Link>Common/Base/ProcessHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Component\Config\SQLConfig.cs" Link="Common\Module\SQL\SQLConfig.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Component\Config\StartConfig.cs">
+      <Link>Common\Component\Config\StartConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\ActorLocation\IActorLocationMessage.cs">
+      <Link>Common\Module\ActorLocation\IActorLocationMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Actor\IActorMessage.cs">
+      <Link>Common\Module\Actor\IActorMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Config\AConfigComponent.cs">
+      <Link>Common\Module\Config\AConfigComponent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\CoroutineLock\CoroutineLock.cs">
+      <Link>Common\Module\CoroutineLock\CoroutineLock.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\CoroutineLock\CoroutineLockComponent.cs">
+      <Link>Common\Module\CoroutineLock\CoroutineLockComponent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\CoroutineLock\CoroutineLockQueue.cs">
+      <Link>Common\Module\CoroutineLock\CoroutineLockQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\CoroutineLock\CoroutineLockQueueType.cs">
+      <Link>Common\Module\CoroutineLock\CoroutineLockQueueType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\CoroutineLock\CoroutineLockType.cs">
+      <Link>Common\Module\CoroutineLock\CoroutineLockType.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\MessagePool.cs">
+      <Link>Common\Module\Message\MessagePool\ETModel\MessagePool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\NetOuterComponent.cs">
+      <Link>Common\Module\Message\NetOuterComponent.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\Network\WebSocket\WChannel.cs">
+      <Link>Common\Module\Message\Network\WebSocket\WChannel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\Network\WebSocket\WService.cs">
+      <Link>Common\Module\Message\Network\WebSocket\WService.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Hotfix\Common\Module\Message\MessagePool.cs">
+      <Link>Common\Module\Message\MessagePool\ETHotfix\MessagePool.cs</Link>
+    </Compile>
+    <EmbeddedResource Remove="Libs\**" />
+    <None Remove="Libs\**" />
+    <None Remove="graph.bytes" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\DoubleMap.cs" Link="Common\Base\DoubleMap.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Event\Env.cs" Link="Common\Base\Event\Env.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Event\EnvKey.cs" Link="Common\Base\Event\EnvKey.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Event\EventAttribute.cs" Link="Common\Base\Event\EventAttribute.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Event\IEvent.cs" Link="Common\Base\Event\IEvent.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Helper\ByteHelper.cs" Link="Common\Base\Helper\ByteHelper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Helper\EnumHelper.cs" Link="Common\Base\Helper\EnumHelper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Helper\FileHelper.cs" Link="Common\Base\Helper\FileHelper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Helper\IdGenerater.cs" Link="Common\Base\Helper\IdGenerater.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Helper\MD5Helper.cs" Link="Common\Base\Helper\MD5Helper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Helper\MethodInfoHelper.cs" Link="Common\Base\Helper\MethodInfoHelper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Helper\NetHelper.cs" Link="Common\Base\Helper\NetHelper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Helper\ObjectHelper.cs" Link="Common\Base\Helper\ObjectHelper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Helper\RandomHelper.cs" Link="Common\Base\Helper\RandomHelper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Helper\StringHelper.cs" Link="Common\Base\Helper\StringHelper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Helper\TimeHelper.cs" Link="Common\Base\Helper\TimeHelper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Helper\ZipHelper.cs" Link="Common\Base\Helper\ZipHelper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\MultiMap.cs" Link="Common\Base\MultiMap.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\BaseAttribute.cs" Link="Common\Base\Base\BaseAttribute.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\Component.cs" Link="Common\Base\Base\Component.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\ComponentFactory.cs" Link="Common\Base\Base\ComponentFactory.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\ComponentWithId.cs" Link="Common\Base\Base\ComponentWithId.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\Entity.cs" Link="Common\Base\Base\Entity.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\EntityEventAttribute.cs" Link="Common\Base\Base\EntityEventAttribute.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\EventProxy.cs" Link="Common\Base\Base\EventProxy.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\EventSystem.cs" Link="Common\Base\Base\EventSystem.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\IAwakeSystem.cs" Link="Common\Base\Base\IAwakeSystem.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\IChangeSystem.cs" Link="Common\Base\Base\IChangeSystem.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\IDestroySystem.cs" Link="Common\Base\Base\IDestroySystem.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\ILateUpdateSystem.cs" Link="Common\Base\Base\ILateUpdateSystem.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\ILoadSystem.cs" Link="Common\Base\Base\ILoadSystem.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\ISerializeToEntity.cs" Link="Common\Base\Base\ISerializeToEntity.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\IStartSystem.cs" Link="Common\Base\Base\IStartSystem.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\IUpdateSystem.cs" Link="Common\Base\Base\IUpdateSystem.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\Object.cs" Link="Common\Base\Base\Object.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\ObjectPool.cs" Link="Common\Base\Base\ObjectPool.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\Object\ObjectSystemAttribute.cs" Link="Common\Base\Base\ObjectSystemAttribute.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\OneThreadSynchronizationContext.cs" Link="Common\Base\OneThreadSynchronizationContext.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\QueueDictionary.cs" Link="Common\Base\QueueDictionary.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\RecyclableMemoryStream\Events.cs" Link="Common\Base\RecyclableMemoryStream\Events.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\RecyclableMemoryStream\RecyclableMemoryStream.cs" Link="Common\Base\RecyclableMemoryStream\RecyclableMemoryStream.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\RecyclableMemoryStream\RecyclableMemoryStreamManager.cs" Link="Common\Base\RecyclableMemoryStream\RecyclableMemoryStreamManager.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\TryLocker.cs" Link="Common\Base\TryLocker.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Base\UnOrderMultiMap.cs" Link="Common\Base\UnOrderMultiMap.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Component\Config\ClientConfig.cs" Link="Common\Component\Config\ClientConfig.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Component\Config\DBConfig.cs" Link="Common\Module\DB\DBConfig.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Component\Config\HttpConfig.cs" Link="Common\Module\Http\HttpConfig.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Component\Config\InnerConfig.cs" Link="Common\Module\Message\InnerConfig.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Component\Config\OuterConfig.cs" Link="Common\Module\Message\OuterConfig.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Component\TimerComponent.cs" Link="Common\Component\TimerComponent.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Config\ACategory.cs" Link="Common\Module\Config\ACategory.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Config\ConfigAttribute.cs" Link="Common\Module\Config\ConfigAttribute.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Config\IConfig.cs" Link="Common\Module\Config\IConfig.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\AMHandler.cs" Link="Common\Module\Message\AMHandler.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\ErrorCode.cs" Link="Common\Module\Message\ErrorCode.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\IMessage.cs" Link="Common\Module\Message\IMessage.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\IMessageDispatcher.cs" Link="Common\Module\Message\IMessageDispatcher.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\IMessagePacker.cs" Link="Common\Module\Message\IMessagePacker.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\IMHandler.cs" Link="Common\Module\Message\IMHandler.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\MessageAttribute.cs" Link="Common\Module\Message\MessageAttribute.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\MessageHandlerAttribute.cs" Link="Common\Module\Message\MessageHandlerAttribute.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\MessageInfo.cs" Link="Common\Module\Message\MessageInfo.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\NetworkComponent.cs" Link="Common\Module\Message\NetworkComponent.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\Network\AChannel.cs" Link="Common\Module\Message\Network\AChannel.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\Network\AService.cs" Link="Common\Module\Message\Network\AService.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\Network\Circularbuffer.cs" Link="Common\Module\Message\Network\Circularbuffer.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\Network\KCP\KChannel.cs" Link="Common\Module\Message\Network\KCP\KChannel.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\Network\KCP\KService.cs" Link="Common\Module\Message\Network\KCP\KService.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\Network\NetworkHelper.cs" Link="Common\Module\Message\Network\NetworkHelper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\Network\TCP\PacketParser.cs" Link="Common\Module\Message\Network\TCP\PacketParser.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\Network\TCP\TChannel.cs" Link="Common\Module\Message\Network\TCP\TChannel.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\Network\TCP\TService.cs" Link="Common\Module\Message\Network\TCP\TService.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\Opcode.cs" Link="Common\Module\Message\Opcode.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\OpcodeHelper.cs" Link="Common\Module\Message\OpcodeHelper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\OpcodeTypeComponent.cs" Link="Common\Module\Message\OpcodeTypeComponent.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\ProtobufHelper.cs" Link="Common\Module\Message\ProtobufHelper.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\ProtobufPacker.cs" Link="Common\Module\Message\ProtobufPacker.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\RpcException.cs" Link="Common\Module\Message\RpcException.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Message\Session.cs" Link="Common\Module\Message\Session.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Numeric\INumericWatcher.cs" Link="Common\Module\Numeric\INumericWatcher.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Numeric\NumericChangeEvent_NotifyWatcher.cs" Link="Common\Module\Numeric\NumericChangeEvent_NotifyWatcher.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Numeric\NumericComponent.cs" Link="Common\Module\Numeric\NumericComponent.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Numeric\NumericType.cs" Link="Common\Module\Numeric\NumericType.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Numeric\NumericWatcherAttribute.cs" Link="Common\Module\Numeric\NumericWatcherAttribute.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Numeric\NumericWatcherComponent.cs" Link="Common\Module\Numeric\NumericWatcherComponent.cs" />
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\ArrayPool.cs">
+      <Link>Common\Module\Pathfinding\Recast\ArrayPool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\AstarChecksum.cs">
+      <Link>Common\Module\Pathfinding\Recast\AstarChecksum.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\AStarConfig.cs">
+      <Link>Common\Module\Pathfinding\Recast\AStarConfig.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\AstarDeserializer.cs">
+      <Link>Common\Module\Pathfinding\Recast\AstarDeserializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\AstarMath.cs">
+      <Link>Common\Module\Pathfinding\Recast\AstarMath.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\AstarMemory.cs">
+      <Link>Common\Module\Pathfinding\Recast\AstarMemory.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\BBTree.cs">
+      <Link>Common\Module\Pathfinding\Recast\BBTree.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\BinaryHeap.cs">
+      <Link>Common\Module\Pathfinding\Recast\BinaryHeap.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\EuclideanEmbedding.cs">
+      <Link>Common\Module\Pathfinding\Recast\EuclideanEmbedding.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Funnel.cs">
+      <Link>Common\Module\Pathfinding\Recast\Funnel.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\GraphNode.cs">
+      <Link>Common\Module\Pathfinding\Recast\GraphNode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\GraphTransform.cs">
+      <Link>Common\Module\Pathfinding\Recast\GraphTransform.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Guid.cs">
+      <Link>Common\Module\Pathfinding\Recast\Guid.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\INavmesh.cs">
+      <Link>Common\Module\Pathfinding\Recast\INavmesh.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Int3.cs">
+      <Link>Common\Module\Pathfinding\Recast\Int3.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\IntRect.cs">
+      <Link>Common\Module\Pathfinding\Recast\IntRect.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\ListPool.cs">
+      <Link>Common\Module\Pathfinding\Recast\ListPool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\NavGraph.cs">
+      <Link>Common\Module\Pathfinding\Recast\NavGraph.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\NavmeshBase.cs">
+      <Link>Common\Module\Pathfinding\Recast\NavmeshBase.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\NavmeshTile.cs">
+      <Link>Common\Module\Pathfinding\Recast\NavmeshTile.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\NN.cs">
+      <Link>Common\Module\Pathfinding\Recast\NN.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\ObjectPool.cs">
+      <Link>Common\Module\Pathfinding\Recast\ObjectPool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Path.cs">
+      <Link>Common\Module\Pathfinding\Recast\Path.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Pathfinders\ABPath.cs">
+      <Link>Common\Module\Pathfinding\Recast\Pathfinders\ABPath.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Pathfinders\ConstantPath.cs">
+      <Link>Common\Module\Pathfinding\Recast\Pathfinders\ConstantPath.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Pathfinders\FleePath.cs">
+      <Link>Common\Module\Pathfinding\Recast\Pathfinders\FleePath.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Pathfinders\FloodPath.cs">
+      <Link>Common\Module\Pathfinding\Recast\Pathfinders\FloodPath.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Pathfinders\FloodPathTracer.cs">
+      <Link>Common\Module\Pathfinding\Recast\FloodPathTracer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Pathfinders\MultiTargetPath.cs">
+      <Link>Common\Module\Pathfinding\Recast\Pathfinders\MultiTargetPath.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Pathfinders\RandomPath.cs">
+      <Link>Common\Module\Pathfinding\Recast\Pathfinders\RandomPath.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Pathfinders\XPath.cs">
+      <Link>Common\Module\Pathfinding\Recast\Pathfinders\XPath.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\PathFindHelper.cs">
+      <Link>Common\Module\Pathfinding\Recast\PathFindHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\PathHandler.cs">
+      <Link>Common\Module\Pathfinding\Recast\PathHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\PathPool.cs">
+      <Link>Common\Module\Pathfinding\Recast\PathPool.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\PathProcessor.cs">
+      <Link>Common\Module\Pathfinding\Recast\PathProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\PathReturnQueue.cs">
+      <Link>Common\Module\Pathfinding\Recast\PathReturnQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\RecastGenerator.cs">
+      <Link>Common\Module\Pathfinding\Recast\RecastGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Serialization\JsonSerializer.cs">
+      <Link>Common\Module\Pathfinding\Recast\Serialization\JsonSerializer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Serialization\SimpleZipReplacement.cs">
+      <Link>Common\Module\Pathfinding\Recast\Serialization\SimpleZipReplacement.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\Serialization\TinyJson.cs">
+      <Link>Common\Module\Pathfinding\Recast\Serialization\TinyJson.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\ThreadControlQueue.cs">
+      <Link>Common\Module\Pathfinding\Recast\ThreadControlQueue.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\TriangleMeshNode.cs">
+      <Link>Common\Module\Pathfinding\Recast\TriangleMeshNode.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Module\Pathfinding\Recast\WindowsStoreCompatibility.cs">
+      <Link>Common\Module\Pathfinding\Recast\WindowsStoreCompatibility.cs</Link>
+    </Compile>
+    <Compile Include="..\..\Unity\Assets\Model\Common\Other\AppType.cs" Link="Common\Other\AppType.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.2.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Scripting" Version="2.9.0" />
+    <PackageReference Include="NLog" Version="4.5.4" />
+    <PackageReference Include="SharpZipLib" Version="1.0.0-alpha2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ThirdParty\Google.Protobuf\Google.Protobuf.csproj" />
+    <ProjectReference Include="..\ThirdParty\KcpLib\KcpLib.csproj" />
+    <ProjectReference Include="..\ThirdParty\MongoDBDriver\MongoDB.Bson\MongoDB.Bson.csproj" />
+    <ProjectReference Include="..\ThirdParty\MongoDBDriver\MongoDB.Driver.Core\MongoDB.Driver.Core.csproj" />
+    <ProjectReference Include="..\ThirdParty\MongoDBDriver\MongoDB.Driver\MongoDB.Driver.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Common\Base\RecyclableMemoryStream\" />
+    <Folder Include="Common\Base\Base\" />
+    <Folder Include="Common\Component\Config\" />
+    <Folder Include="Common\Module\Message\Network\KCP\" />
+    <Folder Include="Common\Module\Message\Network\TCP\" />
+    <Folder Include="Common\Module\Message\MessagePool\" />
+    <Folder Include="Common\Module\Numeric\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Pathfinding.Ionic.Zip.Reduced, Version=1.9.1.9000, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\ThirdParty\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

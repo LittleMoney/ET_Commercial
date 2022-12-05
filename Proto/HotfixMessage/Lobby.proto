@@ -1,0 +1,313 @@
+syntax = "proto3";
+
+package ETHotfix;
+
+//client-realm ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//登录请求
+message C2R_Login // IRequest
+{
+	sint32 RpcId = 90;
+
+	sint64 	ServerVersion = 1;		//客户端对应的服务器版本号
+	string 	Accounts = 2;			//登录帐号
+	string 	Password = 3;			//登录密码
+	string	MachineCode = 4;		//客户端机器码
+	sint64 	ChannelId = 5;			//客户端的渠道号
+	sint32 	PlatformId = 6;			//客户端平台号
+	string 	PhoneCode = 7;			//客户端的手机型号			
+}
+
+message R2C_Login // IResponse
+{
+	sint32 RpcId = 90;
+	sint32 Error = 91;
+	string Message = 92;
+
+	string  GateIPAddress = 1;		//Gate地址
+	string  LoginKey = 2;			//Gate登录Key
+}
+
+//登录请求
+message C2R_Register // IRequest
+{
+	sint32 RpcId = 90;
+
+	string	Accounts = 2;			//登录帐号
+	string	Password = 3;			//登录密码
+	string	NickName = 4;			//昵称
+	string	MachineCode = 5;			//客户端机器码
+	sint32	ChannelId = 6;			//客户端的渠道号
+	sint32	SpreadCode = 7;			//推广号		
+}
+
+message R2C_Register // IResponse
+{
+	sint32 RpcId = 90;
+	sint32 Error = 91;
+	string Message = 92;
+}
+
+//client-gate /////////////////////////////////////////////////////////////////////////////////////////
+
+//登录网关
+message C2G_LoginGate // IRequest
+{
+	sint32 RpcId = 90;
+	string LoginKey = 1;		//登录密钥
+	string MachineCode = 2;	//客户端机器码
+}
+
+message G2C_LoginGate // IResponse
+{
+	sint32 RpcId = 90;
+	sint32 Error = 91;
+	string Message = 92;
+
+	sint64 LongKey=1;		//长期tolken
+}
+
+message C2G_Heart // IMessage
+{
+}
+
+//data //////////////////////////////////////////////////////////////////////////////////
+
+//亲友圈信息 
+message ClubInfo
+{
+	sint32 	ClubId = 1;					//亲友圈ID
+	string 	Name = 2;					//亲友圈名字
+	sint64 	OwnGameId = 3;				//创建人UserId
+	sint32 	UserCount = 4;				//人数
+	sint32 	TableCount = 5;				//桌子数
+	repeated sint32 GameKindIds = 6;	//朋友圈开通的游戏类型
+}
+
+//桌子信息
+message TableInfo
+{
+	sint32 GameKindId = 2;	//桌子所属的游戏
+	sint32 TableId = 1;		//桌子编号
+	sint32 CurrentTrun = 3;	//桌子当前轮数
+	sint32 Status = 4;		//桌子状态 0取消 1空闲 2游戏中	
+}
+
+//用户信息
+message UserInfo
+{
+	sint64	GameId = 1;		//用户编号
+	string 	Icon = 2;			//用户头像
+	string	Name = 3;			//用户名称
+	bool	Gender = 4;		//用户性别
+
+	sint32	ClubId = 6;		//用户当前所在的俱乐部
+	sint32	TableId = 7;	//用户当前桌子号
+	sint32	ChiarId = 8;	//用户当前椅子号
+	sint32	Status = 9;	//0用户离开俱乐部 2用户上桌 3用户游戏中 4断线中 
+	sint64  Score = 10;		//用户分数
+}
+
+//centor-client /////////////////////////////////////////////////////////////////////////////////////////
+
+//中心下发用户信息 
+message Actor_CurrUserInfo			//IActorMessage
+{
+	sint64 ActorId = 94;
+
+	UserInfo UserInfo = 1;
+	repeated ClubInfo ClubInfos = 3;	//用户所有的朋友圈信息
+}
+
+//俱乐部桌子信息列表,如果用户在club中，下发用户信息后接着下发，或在进入俱乐部后下发
+message Actor_TablelInfoList 	//IActorMessage
+{
+	sint64 ActorId = 94;
+	
+	repeated TableInfo TableInfo = 1;		
+}
+
+//俱乐部进入用户信息列表，在ClubInfo后下发
+message Actor_UserComes 	//IActorMessage
+{
+	sint64 ActorId = 94;
+	
+	repeated UserInfo UserInfo = 1;		
+}
+
+//增加桌子
+message Actor_TableCreate 	//IActorMessage
+{
+	sint64 ActorId = 94;
+
+	TableInfo TableInfo = 1;
+}
+
+//删除桌子
+message Actor_TableDestroy 	//IActorMessage
+{
+	sint64 ActorId = 94;
+
+	sint32 TableId = 1;
+}
+
+//桌子状态改变
+message Actor_TableStatus 	//IActorMessage
+{
+	sint64 ActorId = 94;
+
+	sint32 TableId=1;		//桌子编号
+	sint32 CurrentTrun=2;	//当前第几轮
+	sint32 Status=3;	//桌子状态
+}
+
+//用户状态改变
+message Actor_UserStatus 	//IActorMessage
+{
+	sint64 ActorId = 94;
+	
+	sint64 GameId=1;		//用户编号
+	sint32 TableId=2;		//桌子编号
+	sint32 ChiarId=3;		//椅子编号
+	sint32 Status=4;		//用户状态		
+}
+
+//用户分数改变
+message Actor_UserScore 	//IActorMessage
+{
+	sint64 ActorId = 94;
+	
+	sint64 GameId=1;			//用户编号
+	sint64 Score=2; 			//当前分数
+}
+
+//client-centor //////////////////////////////////////////////////////////////////////////////
+//申请加入俱乐部
+message Actor_JoinClubRequest 	//ICentorActorRequest
+{
+	sint32 RpcId = 90;
+	sint64 ActorId = 94;
+
+	sint64 ClubId = 1;	//朋友圈ID
+}
+message Actor_JoinClubResponse 	//ICentorActorResponse
+{
+	sint32  RpcId = 90;
+	sint32  Error = 91;
+	string Message = 92;
+}
+
+//申请加入俱乐部
+message Actor_QuitClubRequest 	//ICentorActorRequest
+{
+	sint32 RpcId = 90;
+	sint64 ActorId = 94;
+
+	sint32 ClubId = 1;	//朋友圈ID
+}
+message Actor_QuitClubResponse 	//ICentorActorResponse
+{
+	sint32  RpcId = 90;
+	sint32  Error = 91;
+	string Message = 92;
+}
+
+
+//客户端进入俱乐部，中心服务器下发俱乐部所有信息，并开始同步状态
+message Actor_InClubRequest 	//ICentorActorRequest
+{
+	sint32 RpcId = 90;
+	sint64 ActorId = 94;
+
+	sint32 ClubId = 1;	//朋友圈ID
+}
+message Actor_InClubResponse 	//ICentorActorResponse
+{
+	sint32  RpcId = 90;
+	sint32  Error = 91;
+	string Message = 92;
+}
+
+//客户端推出俱乐部
+message Actor_OutClubRequest 	//ICentorActorRequest
+{
+	sint32 RpcId = 90;
+	sint64 ActorId = 94;
+
+	sint32 ClubId = 1;	//朋友圈ID
+}
+message Actor_OutClubResponse 	//ICentorActorResponse
+{
+	sint32  RpcId = 90;
+	sint32  Error = 91;
+	string Message = 92;
+}
+
+
+//客户端请求中心服务器上桌
+message Actor_SitdownRequest 	//ICentorActorRequest
+{
+	sint32 RpcId = 90;
+	sint64 ActorId = 94;
+
+	sint32 TableId=1;	//桌子编号
+	sint32 ChairId=2;	//椅子编号
+}
+message Actor_SitdownResponse	// ICentorActorResponse
+{
+	sint32 RpcId = 90;
+	sint32 Error = 91;
+	string Message = 92;
+}
+
+
+//用户请求中心服务器离桌
+message Actor_StandupRequest 	//ICentorActorRequest
+{
+	sint32 RpcId = 90;
+	sint64 ActorId = 94;
+
+}
+message Actor_StandupResponse 	// ICentorActorResponse
+{
+	sint32 RpcId = 90;
+	sint32 Error = 91;
+	string Message = 92;
+}
+
+
+//用户请求中心服务服务器准备
+message Actor_ReadyRequest 	//ICentorActorRequest
+{
+	sint32 RpcId = 90;
+	sint64 ActorId = 94;
+
+}
+message Actor_ReadyResponse 	// ICentorActorResponse
+{
+	sint32 RpcId = 90;
+	sint32 Error = 91;
+	string Message = 92;
+}
+
+
+//用户请求中心服务器取消准备
+message Actor_UnReadyRequest 	//ICentorActorRequest
+{
+	sint32 RpcId = 90;
+	sint64 ActorId = 94;
+
+}
+message Actor_UnReadyResponse 	// ICentorActorResponse
+{
+	sint32 RpcId = 90;
+	sint32 Error = 91;
+	string Message = 92;
+}
+
+
+//客户端请求拉取游戏信息
+message Actor_GetGameInfo 	// ICentorActorMessage
+{
+	sint64 ActorId = 94;
+}

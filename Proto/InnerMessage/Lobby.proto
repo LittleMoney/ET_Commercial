@@ -1,0 +1,193 @@
+syntax = "proto3";
+package ETModel;
+
+//realm-gate //////////////////////////////////////////////////////////////
+
+//验证服向网关服请求秘钥
+message R2G_GetLoginKey // IRequest
+{
+	int32 RpcId = 90;
+	int32 UserId = 1;
+	string IP = 2;
+	string MachineSerial = 3;
+}
+
+message G2R_GetLoginKey // IResponse
+{
+	int32 	RpcId = 90;
+	int32 	Error = 91;
+	string 	Message = 92;
+
+	string 	LoginKey = 1;
+}
+
+
+//gite-center/////////////////////////////////////////////////////////
+
+//网关通知中心服务器用户上线
+message G2SC_UserEntry	//IRequest
+{
+	int32 	RpcId = 90;
+
+	int32 	UserId = 1;				//用户id
+	int64 	GateActorId = 2;		//网关sessionid
+	string 	IpAddress = 3;			//ip地址
+	string 	MachineCode = 4;		//机器码
+}
+message SC2G_UserEntry	//IResponse
+{
+	int32 RpcId = 90;
+	int32 Error = 91;
+	string Message = 92;
+
+	int64 UserActorId=1;			//中心服务器User ActorId
+}
+
+//网关通知中心服务器用户离线
+message Actor_UserOffline	//IActorMessage
+{
+	int64 ActorId = 94;		//Centor服务器用户的ActorId
+}
+
+
+//center-gate/////////////////////////////////////////////////////////
+
+//中心服务器通知网关被挤压号
+message Actor_ForceOffline	//IActorMessage
+{
+	int64 ActorId = 94;		//Gate服务器用户的ActorId
+}
+
+
+
+//centor-map //////////////////////////////////////////////////////////////////////////
+
+
+//中心通知游戏服启动游戏
+message SC2M_BoostGame	//IRequest
+{
+	int32 RpcId = 90;
+
+	int32 ClubId = 1;
+	int32 TableId = 2;		//桌子编号
+	repeated int32 UserIds = 3 ;		//用户id
+	repeated int64 GateActorIds = 4;	//用户网关id
+	repeated int64 Scores = 5;			//用户带入分数
+}
+message M2SC_BoostGame	//IResponse
+{
+	int32 RpcId = 90;
+	int32 Error = 91;
+	string Message = 92;
+
+	int64 GameTableActorId=3;	//游戏服务中桌子的ActorId
+}
+
+//中心通知游戏服开始游戏
+message Actor_StartGameRequest  //IActorRequest
+{
+	int32 RpcId = 90;
+	int64 ActorId = 94;				//桌子的ActorId
+
+	repeated int32 GameKindId=1;		//游戏类型
+	repeated int32 UserIds = 3 ;		//用户id
+	repeated int64 GateActorIds = 4;	//用户网关id
+	repeated int64 Scores = 5;			//用户带入分数
+}
+message Actor_StartGameResponse //IActorResponse
+{
+	int32 RpcId = 90;
+	int32 Error = 91;
+	string Message = 92;
+}
+
+//中心通知游戏服终止游戏
+message Actor_HaltGame	//IActorMessage
+{
+	int64 ActorId = 94;		//桌子的ActorId
+}
+
+//中心通知游戏服用户离线
+message Actor_GameUserOffline //IActorMessage
+{
+	int64 ActorId = 94;		//桌子的ActorId
+
+	int32 ChairId = 1;
+	int32 UserId = 2;
+}
+
+//中心通知游戏服用户重连
+message Actor_UserReconnect //IActorMessage
+{
+	int64 ActorId = 94;		//桌子的ActorId
+
+	int32 ChairId = 1;
+	int32 UserId = 2;		//用户id
+	int64 GateActorId = 3;	//网关sessionid
+}
+
+//中心通知游戏服用户被替换
+message Actor_UserReplace //IActorMessage
+{
+	int64 ActorId = 94;		//桌子的ActorId
+
+	int32 ChairId = 1;
+	int32 UserId = 2;		//用户id
+	int64 GateActorId = 3;	//网关sessionid
+}
+
+//中心通知游戏服用户起立
+message Actor_UserStandupRequest //IActorRequest
+{
+	int32 RpcId = 90;
+	int64 ActorId = 94;		//桌子的ActorId
+
+	int32 ChairId = 1;		//椅子编号
+	int64 UserId = 2;		//用户id
+
+}
+message Actor_UserStandupResponse //IActorResponse
+{
+	int32 RpcId = 90;
+	int32 Error = 91;
+	string Message = 92;
+}
+
+//中心通知游戏服用户请求拉取游戏信息
+message Actor_UserRequestGameInfo 	// IActorMessage
+{
+	int64 ActorId = 94;		//桌子的ActorId
+
+	int32 ChairId = 1;		//用户id
+	int32 UserId = 2;		//用户id
+}
+
+//map-centor////////////////////////////////////////////////////////////////////////////////////////////////
+
+//游戏通知中心游戏结束
+message M2SC_GameEnd	//IMessage
+{
+	int64 GameTableActorId = 1;	//游戏服务中桌子的ActorId
+	int32 ClubId = 2;				//桌子编号
+	int32 TableId = 3;				//桌子编号
+	repeated int64 EndScores = 4;	//结算分数 按照椅子顺序实施
+	int32 LeftChairId = 5;			//逃跑的椅子
+	string GameRecordGUID=6;
+}
+
+
+//map-gate ///////////////////////////////////////////////////////////////////////////
+//游戏通知网关用户进入游戏
+message Actor_UserInGame	//IActorMessage
+{
+	int64  ActorId=94;
+	int64  GameActorId= 1;	
+}
+
+//游戏通知网关用户离开游戏
+message Actor_UserOutGame	//IActorMessage
+{
+	int64  ActorId=94;
+	int64  GameActorId= 1;	
+}
+

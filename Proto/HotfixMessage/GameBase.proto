@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ETHotfix;
+
+
+//请求准备
+message C2G_Ready  // IGameActorMessage
+{
+	sint32 RpcId = 90;
+	sint64 ActorId = 94;
+}
+
+

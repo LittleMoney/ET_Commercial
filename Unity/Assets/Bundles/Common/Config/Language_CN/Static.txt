@@ -1,0 +1,9 @@
+{"Id":"ok","Value":"确定"}
+{"Id":"cancel","Value":"取消"}
+{"Id":"yes","Value":"是"}
+{"Id":"no","Value":"否"}
+{"Id":"RMB","Value":"元"}
+{"Id":"confirm","Value":"确定"}
+{"Id":"delete","Value":"删除"}
+{"Id":"time","Value":"时间"}
+{"Id":"records","Value":"记录"}
