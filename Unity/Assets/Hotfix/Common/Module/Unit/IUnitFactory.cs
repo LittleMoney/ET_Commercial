@@ -35,6 +35,6 @@ namespace ETHotfix
 		/// </summary>
 		/// <param name="uiType"></param>
 		/// <param name="ui"></param>
-		void Remove(Unit ui,bool isRemainGameObject);
+		void Remove(Unit ui);
 	}
 }

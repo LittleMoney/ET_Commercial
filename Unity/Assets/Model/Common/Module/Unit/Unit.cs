@@ -56,11 +56,7 @@ namespace ETModel
 
 		public override void Destroy(Unit self)
 		{
-			if (self.g_rootGameObject != null)
-			{
-				UnityEngine.Object.Destroy(self.g_rootGameObject);
-				self.g_rootGameObject = null;
-			}
+			self.g_rootGameObject=null;
 		}
 	}
 
@@ -68,7 +64,7 @@ namespace ETModel
     {
 		public static void Start(this Unit self)
         {
-			if(!self.g_isHided && !self.g_hasStarted)
+			if(!self.g_hasStarted)
             {
 				foreach (Component component in self.GetComponents<IUnitCycle>())
 				{
@@ -139,18 +135,9 @@ namespace ETModel
 		/// </summary>
 		/// <param name="self"></param>
 		/// <returns></returns>
-		public static void Dispose(this Unit self,bool isRemainGameObject)
+		public static void Dispose(this Unit self)
 		{
-			if (isRemainGameObject)
-			{
-				self.g_rootGameObject = null;
-				self.Dispose();
-			}
-            else
-            {
-				self.Dispose();
-			}
-		
+			self.Dispose();
 		}
 	}
 }

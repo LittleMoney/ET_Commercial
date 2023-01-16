@@ -211,7 +211,7 @@ namespace ETModel
 		/// <param name="data"></param>
 		/// <param name="suspendShow"></param>
 		/// <returns></returns>
-		public static async ETTask<Unit> CreateAsync(this UnitComponent self, string unitType, long id, object data = null, bool suspendShow = false)
+		public static async ETTask<Unit> CreateAsync(this UnitComponent self, string unitType, long id, object data = null)
 		{
 			if (self.unitDict.TryGetValue(id, out Unit _holder))
 			{
@@ -237,7 +237,7 @@ namespace ETModel
 			_unitHashSet.Add(_unit);
 			self.unitDict.Add(_unit.Id, _unit);
 			_unit.Start();
-			if (!suspendShow && _unit.g_isHided)
+			if (_unit.g_isHided)
 			{
 				_unit.Show();
 			}
@@ -282,14 +282,14 @@ namespace ETModel
 				}
 			}
 		}
-
+		
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="self"></param>
 		/// <param name="unit"></param>
 		/// <param name="isRemainGameObject"></param>
-		public static void Remove(this UnitComponent self, Unit unit, bool isRemainGameObject)
+		public static void Remove(this UnitComponent self, Unit unit)
 		{
 			if (!self.unitDict.TryGetValue(unit.Id, out Unit _unit)) return;
 
@@ -302,11 +302,11 @@ namespace ETModel
 			//谁创建谁释放
 			if (self.unitFactorys.TryGetValue(_unit.g_unitType, out IUnitFactory iFactory))
 			{
-				iFactory.Remove(_unit, isRemainGameObject);
+				iFactory.Remove(_unit);
 			}
 			else
 			{
-				self.gs_defaultUIFactory.Remove(_unit, isRemainGameObject);
+				self.gs_defaultUIFactory.Remove(_unit);
 			}
 		}
 
@@ -316,7 +316,7 @@ namespace ETModel
 		/// <param name="self"></param>
 		/// <param name="unit"></param>
 		/// <param name="isRemainGameObject"></param>
-		public static void Remove(this UnitComponent self, long id, bool isRemainGameObject)
+		public static void Remove(this UnitComponent self, long id)
 		{
 			if (!self.unitDict.TryGetValue(id, out Unit _unit)) return;
 
@@ -329,11 +329,11 @@ namespace ETModel
 			//谁创建谁释放
 			if (self.unitFactorys.TryGetValue(_unit.g_unitType, out IUnitFactory iFactory))
 			{
-				iFactory.Remove(_unit, isRemainGameObject);
+				iFactory.Remove(_unit);
 			}
 			else
 			{
-				self.gs_defaultUIFactory.Remove(_unit, isRemainGameObject);
+				self.gs_defaultUIFactory.Remove(_unit);
 			}
 		}
 

@@ -180,7 +180,7 @@ namespace ETModel
 		/// <param name="self"></param>
 		public static void Start(this UI self)
 		{
-			if (!self.g_isHided && !self.g_hasStarted) //如果初始化已经是显示状态，则强制调用一次OnShow
+			if (!self.g_hasStarted) 
 			{
 				foreach (Component component in self.GetComponents<IUICycle>())
 				{
@@ -198,16 +198,7 @@ namespace ETModel
         {
 			self.g_rootGameObject.SetActive(true);
 			self.g_isHided = false;
-
-			if (!self.g_hasStarted)
-			{
-				foreach (Component component in self.GetComponents<IUICycle>())
-				{
-					(component as IUICycle).OnStart();
-				}
-				self.g_hasStarted = true;
-			}
-
+			
 			foreach (Component component in self.GetComponents<IUICycle>())
 			{
 				(component as IUICycle).OnShow();

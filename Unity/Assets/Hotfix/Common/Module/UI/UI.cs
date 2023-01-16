@@ -180,12 +180,12 @@ namespace ETHotfix
 		/// <param name="self"></param>
 		public static void Start(this UI self)
 		{
-			if (!self.g_isHided && !self.g_hasStarted) //如果初始化已经是显示状态，则强制调用一次OnShow
+			if (!self.g_hasStarted) 
 			{
+				self.g_hasStarted = true;
 				foreach (Component component in self.GetComponents<ETModel.IUICycle>())
 				{
 					(component as ETModel.IUICycle).OnStart();
-					self.g_hasStarted = true;
 				}
 			}
 		}
@@ -198,15 +198,6 @@ namespace ETHotfix
 		{
 			self.g_rootGameObject.SetActive(true);
 			self.g_isHided = false;
-
-			if(!self.g_hasStarted)
-            {
-				foreach (Component component in self.GetComponents<ETModel.IUICycle>())
-				{
-					(component as ETModel.IUICycle).OnStart();
-				}
-				self.g_hasStarted = true;
-			}
 
 			foreach (Component component in self.GetComponents<ETModel.IUICycle>())
 			{

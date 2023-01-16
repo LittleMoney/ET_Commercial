@@ -38,7 +38,7 @@ namespace ETHotfix
 
 			//关闭Model层UI，改用Hotfix层UI
 			UIComponent.Instance.Open(UIType.CommonLoadingPanel);
-			BroadcastComponent.Instance.GetDefault().Run<int, string>(BroadcastId.ProgressMessage, 0, "启动应用...");
+			BroadcastComponent.Instance.g_default.Run<int, string>(BroadcastId.ProgressMessage, 0, "启动应用...");
 			ETModel.UIComponent.Instance.Close(ETModel.UIType.CommonLoadingPanel);
 			Game.EventSystem.Run(EventIdType.InitSceneStart);
 		}

@@ -57,11 +57,7 @@ namespace ETHotfix
 
 		public override void Destroy(Unit self)
 		{
-			if (self.g_rootGameObject != null)
-			{
-				UnityEngine.Object.Destroy(self.g_rootGameObject);
-				self.g_rootGameObject = null;
-			}
+			self.g_rootGameObject = null;
 		}
 	}
 
@@ -69,13 +65,13 @@ namespace ETHotfix
     {
 		public static void Start(this Unit self)
         {
-			if(!self.g_isHided && !self.g_hasStarted)
+			if(!self.g_hasStarted)
             {
 				foreach (Component component in self.GetComponents<IUnitCycle>())
 				{
 					(component as IUnitCycle).OnStart();
 				}
-				if (!self.g_hasStarted) self.g_hasStarted = true;
+				self.g_hasStarted = true;
 			}
         }
 
@@ -87,15 +83,6 @@ namespace ETHotfix
 		{
 			self.g_rootGameObject.SetActive(true);
 			self.g_isHided = false;
-
-			if(!self.g_hasStarted)
-            {
-				foreach (Component component in self.GetComponents<IUnitCycle>())
-				{
-					(component as IUnitCycle).OnStart();
-				}
-				self.g_hasStarted = true;
-			}
 
 			foreach (Component component in self.GetComponents<IUnitCycle>())
 			{
@@ -133,25 +120,6 @@ namespace ETHotfix
 				(subCompoennt as IUnitCycle).OnReset();
 			}
 			self.g_hasStarted = false;
-		}
-
-		/// <summary>
-		/// 销毁但保留GameObject
-		/// </summary>
-		/// <param name="self"></param>
-		/// <returns></returns>
-		public static void Dispose(this Unit self,bool isRemainGameObject)
-		{
-			if (isRemainGameObject)
-			{
-				self.g_rootGameObject = null;
-				self.Dispose();
-			}
-            else
-            {
-				self.Dispose();
-			}
-		
 		}
 	}
 }

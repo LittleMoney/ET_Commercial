@@ -75,14 +75,14 @@ namespace ETHotfix
 
             #region 登录到登录服务器
 
-            BroadcastComponent.Instance.GetDefault().Run(BroadcastId.PreLogin);
+            BroadcastComponent.Instance.g_default.Run(BroadcastId.PreLogin);
 
             Session _loginSession=ComponentFactory.Create<Session,ETModel.Session>(
                 ETModelHelper.GetSceneComponent<NetOuterComponent>().Create(ETModelHelper.GetSceneComponent<AppVersionComponent>().localAppVersionConfig.ServerAddress));
 
             _loginSession.AddComponent<DestroyMoniterComponent, Action<object>, object>((obj) =>
             {
-                BroadcastComponent.Instance.GetDefault().Run(BroadcastId.UnLogined);
+                BroadcastComponent.Instance.g_default.Run(BroadcastId.UnLogined);
             }, null);
 
             try
@@ -128,7 +128,7 @@ namespace ETHotfix
             self.session.AddComponent<DestroyMoniterComponent, Action<object>, object>((obj) =>
             {
                 self.session = null;
-                BroadcastComponent.Instance.GetDefault().Run(BroadcastId.UnLogined);
+                BroadcastComponent.Instance.g_default.Run(BroadcastId.UnLogined);
             }, null);
 
             try
@@ -168,7 +168,7 @@ namespace ETHotfix
             }
 
             if (self.session == null) return;
-            BroadcastComponent.Instance.GetDefault().Run(BroadcastId.Logined);
+            BroadcastComponent.Instance.g_default.Run(BroadcastId.Logined);
         }
     }
 }

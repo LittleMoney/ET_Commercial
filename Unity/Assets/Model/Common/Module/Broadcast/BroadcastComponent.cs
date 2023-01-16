@@ -12,7 +12,7 @@ namespace ETModel
 
 		public Dictionary<string, BroadcastChannel> channels=new Dictionary<string, BroadcastChannel>();
 
-		public BroadcastChannel defaultChannel=null;
+		public BroadcastChannel g_default=null;
 	}
 
 
@@ -21,7 +21,7 @@ namespace ETModel
 	{
 		public override void Awake(BroadcastComponent self)
 		{
-			self.defaultChannel= ComponentFactory.CreateWithParent<BroadcastChannel>(self);
+			self.g_default= ComponentFactory.CreateWithParent<BroadcastChannel>(self);
 			BroadcastComponent.Instance = self;
 		}
 	}
@@ -57,10 +57,6 @@ namespace ETModel
 			return self.channels[channelName];
         }
 
-		public static BroadcastChannel GetDefault(this BroadcastComponent self)
-		{
-			return self.defaultChannel;
-		}
 	}
 
 

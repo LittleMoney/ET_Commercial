@@ -80,7 +80,7 @@ namespace ETModel
 
 		public void Remove(UI ui)
         {
-			//ETModel.Game.Scene.GetComponent<ResourcesComponent>().UnloadBundle(ui.g_uiType);
+			GameObject.Destroy(ui.g_rootGameObject);
 			ui.Dispose();
 		}
     }

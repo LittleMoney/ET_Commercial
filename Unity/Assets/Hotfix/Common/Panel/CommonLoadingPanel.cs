@@ -55,8 +55,8 @@ namespace ETHotfix
 	{
 		public override void Destroy(CommonLoadingPanel self)
 		{
-			BroadcastComponent.Instance.GetDefault().RemoveListener(BroadcastId.ProgressMessage, self);
-			ETModel.BroadcastComponent.Instance.GetDefault().RemoveListener(BroadcastId.ProgressMessage, self);
+			BroadcastComponent.Instance.g_default.RemoveListener(BroadcastId.ProgressMessage, self);
+			ETModel.BroadcastComponent.Instance.g_default.RemoveListener(BroadcastId.ProgressMessage, self);
 		}
 	}
 
@@ -68,12 +68,12 @@ namespace ETHotfix
 		/// <param name="self"></param>
 		public static void Init(this CommonLoadingPanel self)
 		{
-			BroadcastComponent.Instance.GetDefault().AddListener<int,string>(BroadcastId.ProgressMessage, self,(scope, a, b) =>
+			BroadcastComponent.Instance.g_default.AddListener<int,string>(BroadcastId.ProgressMessage, self,(scope, a, b) =>
 			{
 				(scope as CommonLoadingPanel).SetProgress(a, b);
 			});
 
-			ETModel.BroadcastComponent.Instance.GetDefault().AddListener<int,string>(BroadcastId.ProgressMessage, self, (scope, a, b) =>
+			ETModel.BroadcastComponent.Instance.g_default.AddListener<int,string>(BroadcastId.ProgressMessage, self, (scope, a, b) =>
 			{
 				(scope as CommonLoadingPanel).SetProgress(a, b);
 			});

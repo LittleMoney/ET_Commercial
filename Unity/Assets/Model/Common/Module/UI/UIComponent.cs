@@ -644,6 +644,7 @@ namespace ETModel
 				case UIShowType.Pop:
 					{
 						ui.Start();
+
 						if (ui.g_isHided)
 						{
 							ui.Show();
@@ -669,6 +670,7 @@ namespace ETModel
 				case UIShowType.Exclusive:
 					{
 						ui.Start();
+						
 						if (ui.g_isHided)
 						{
 							ui.Show();

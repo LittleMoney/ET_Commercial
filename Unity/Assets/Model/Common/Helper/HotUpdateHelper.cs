@@ -18,29 +18,15 @@ namespace ETModel
     public static class HotUpdateHelper
     {
         /// <summary>
-        /// 请根据自己的情况配置，程序启动时，首先验证热更模块以下的资源正常，才会使用热更资源。
-        /// 否则进入强制更新流程，防止热更文件被破坏后无法进入初始流程。
-        /// </summary>
-        public static readonly string[] commandCoreBundles = new string[]
-        {
-            "Common/hotfix.dll",
-            "Common/hotfix.pdb",
-            "Common/Atlas/Common_atlas_common",
-            "Common/Config/Language_CN",
-            "Common/Config/Language_EN",
-            "Common/Panel/CommonDialogPanel",
-            "Common/Panel/CommonLoadingPanel",
-        }; 
-
-        /// <summary>
-        /// 
+        /// 校验App是否需要采取更新枚举中的一种
         /// </summary>
         /// <param name="toyName"></param>
         /// <param name="isForceUpdate"></param>
         /// <returns></returns>
-        public static async ETTask<UpdateType> AppNeedUpdate()
+        public static async ETTask<UpdateType> CheckAppNeedUpdate()
         {
             bool _isForceUpdate = UnityEngine.PlayerPrefs.GetInt("_isForceUpdate", 0) == 1;
+
 
             AppVersionComponent _appVersionComponent = ETModel.Game.Scene.GetComponent<AppVersionComponent>();
             if (_appVersionComponent == null)
@@ -48,13 +34,14 @@ namespace ETModel
                 _appVersionComponent = ETModel.Game.Scene.AddComponent<AppVersionComponent>();
             }
 
-            if (_isForceUpdate) //强制更新下，清理掉所有热更资源
+            //强制更新下，清理掉所有资源和版本数据
+            if (_isForceUpdate) 
             {
-                _appVersionComponent.RemoveHotfixAppVersionConfig();
+                _appVersionComponent.RemoveAppVersionConfigInHotfix();
 
                 using (BundleDownloaderComponent _bundleDownloaderComponent = ComponentFactory.Create<BundleDownloaderComponent>())
                 {
-                    _bundleDownloaderComponent.ClearHotfixToyDirAll();
+                    _bundleDownloaderComponent.ClearHotfixDir();
                 }
 
                 UnityEngine.PlayerPrefs.GetInt("_isForceUpdate", 0);
@@ -62,54 +49,51 @@ namespace ETModel
 
             try
             {
-                BroadcastComponent.Instance.GetDefault().Run<int, string>(BroadcastId.ProgressMessage, 0, "核对APP版本信息");
-
-                await _appVersionComponent.LoadLocalAppVersionConfigAsync();
-                BroadcastComponent.Instance.GetDefault().Run<int, string>(BroadcastId.ProgressMessage, 20, "载入本地APP版本信息完毕");
+                BroadcastComponent.Instance.g_default.Run<int, string>(BroadcastId.ProgressMessage, 0, "核对APP版本信息");
 
                 await _appVersionComponent.LoadServerAppVersionConfigAsync();
-                BroadcastComponent.Instance.GetDefault().Run<int, string>(BroadcastId.ProgressMessage, 40, "获取远程APP版本信息完毕");
+                BroadcastComponent.Instance.g_default.Run<int, string>(BroadcastId.ProgressMessage, 40, "获取远程APP版本信息完毕");
+
+                await _appVersionComponent.LoadLocalAppVersionConfigAsync();
+                BroadcastComponent.Instance.g_default.Run<int, string>(BroadcastId.ProgressMessage, 20, "载入本地APP版本信息完毕");
 
             }
             catch (Exception error)
             {
-                BroadcastComponent.Instance.GetDefault().Run<int,string>(BroadcastId.ProgressMessage, 0, $"加载服务端版本信息失败:{error.Message}");
+                BroadcastComponent.Instance.g_default.Run<int,string>(BroadcastId.ProgressMessage, 0, $"加载服务端版本信息失败:{error.Message}");
                 throw error;
             }
 
             if (!_appVersionComponent.IsServerNormal())
             {
-                BroadcastComponent.Instance.GetDefault().Run<int,string>(BroadcastId.ProgressMessage, 0, $"{_appVersionComponent.GetServerAnnouncement()}");
+                BroadcastComponent.Instance.g_default.Run<int,string>(BroadcastId.ProgressMessage, 0, $"{_appVersionComponent.GetServerAnnouncement()}");
                 throw new ServerMaintainException($"{_appVersionComponent.GetServerAnnouncement()}");
             }
 
             //核对版本信息
-            UpdateType _updateType = _appVersionComponent.CensorAppNeedUpdate();
+            UpdateType _updateType = _appVersionComponent.CheckAppNeedUpdate();
             if(_updateType!=UpdateType.Cold)
             {
-                if (!_isForceUpdate) //非强制更新，清理掉所有无用的模块
-                {
-                    _appVersionComponent.ClearInvalidLocalToyVersionConfigs();
+                _appVersionComponent.ClearDeprecatedLocalToyVersionConfigs();
 
-                    using (BundleDownloaderComponent _bundleDownloaderComponent = ComponentFactory.Create<BundleDownloaderComponent>())
-                    {
-                        _bundleDownloaderComponent.ClearHotfixToyDirWithOut(_appVersionComponent.GetAllLocalToyDirNames());
-                    }
+                using (BundleDownloaderComponent _bundleDownloaderComponent = ComponentFactory.Create<BundleDownloaderComponent>())
+                {
+                    _bundleDownloaderComponent.ClearHotfixToyDirWithOut(_appVersionComponent.GetAllLocalToyDirNames());
                 }
 
                 //同步app版本信息
-                _appVersionComponent.UpdateLocalAppVersionConfigWithOutToyVersionConfigs();
+                _appVersionComponent.OverrideLocalAppVersionConfigWithOutToy();
 
-                await _appVersionComponent.UpdateHotfixAppVersionConfigAsync();
+                await _appVersionComponent.SavelocalAppVersionConfigToHotfixAsync();
             }
 
-            BroadcastComponent.Instance.GetDefault().Run<int,string>(BroadcastId.ProgressMessage, 100, "检查APP版本信息完毕");
+            BroadcastComponent.Instance.g_default.Run<int,string>(BroadcastId.ProgressMessage, 100, "检查APP版本信息完毕");
 
             return _updateType;
         }
 
         /// <summary>
-        /// 冷更新流程
+        /// 启动冷更新流程
         /// </summary>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
@@ -141,14 +125,14 @@ namespace ETModel
 
 
         /// <summary>
-        /// 
+        /// 校验Toy是否需要更新
         /// </summary>
         /// <param name="toyDirName"></param>
         /// <returns></returns>
-        public static  bool ToyNeedUpdate(string toyDirName)
+        public static  bool CheckToyNeedUpdate(string toyDirName)
         {
             //无需更新直接返回
-            return ETModel.Game.Scene.GetComponent<AppVersionComponent>().CensorToyNeedUpdate(toyDirName);
+            return ETModel.Game.Scene.GetComponent<AppVersionComponent>().CheckToyNeedUpdate(toyDirName);
         }
 
         /// <summary>
@@ -156,13 +140,12 @@ namespace ETModel
         /// </summary>
         /// <param name="toyDirName"></param>
         /// <returns></returns>
-
-        public static async ETTask ToyUpdate(string toyDirName,bool isForceUpdate)
+        public static async ETTask ToyUpdate(string toyDirName,bool isForceUpdate=false)
         {
             AppVersionComponent  _appVersionComponent = ETModel.Game.Scene.GetComponent<AppVersionComponent>();
 
             //无需更新直接返回
-            if (!isForceUpdate && !_appVersionComponent.CensorToyNeedUpdate(toyDirName))
+            if (!isForceUpdate && !_appVersionComponent.CheckToyNeedUpdate(toyDirName))
             {
                 BroadcastComponent.Instance.GetDefault().Run<int,string>(BroadcastId.ProgressMessage, 100, $"模块 {toyDirName} 无需更新");
                 return;
@@ -205,41 +188,17 @@ namespace ETModel
                     });
                 }
 
-                _appVersionComponent.UpdateLocalToyVersionConfig(toyDirName);//更新模块的版本信息
-                await _appVersionComponent.UpdateHotfixAppVersionConfigAsync();
+                //同步模块的签名
+                _appVersionComponent.OverrideLocalToyVersionConfig(toyDirName);
+                await _appVersionComponent.SavelocalAppVersionConfigToHotfixAsync();
             }
             return;
         }
 
         /// <summary>
-        /// 检查热更的核心资源的签名确保一直,如果无效则自动清理掉热更所有数据
+        /// 启动下次启动强制更新
         /// </summary>
-        /// <returns></returns>
-        public static async ETTask CensorCommandCoreBundles()
-        {
-            bool _result = true;
-            using (BundleDownloaderComponent _bundleDownloaderComponent = ComponentFactory.Create<BundleDownloaderComponent>())
-            {
-                _result = await _bundleDownloaderComponent.CensorHotfixBundlesSignMD5(commandCoreBundles);
-
-                if (!_result) //核心资源异常,必须从头更新
-                {
-                    AppVersionComponent _appVersionComponent = ETModel.Game.Scene.GetComponent<AppVersionComponent>();
-                    if (_appVersionComponent == null)
-                    {
-                        _appVersionComponent = ETModel.Game.Scene.AddComponent<AppVersionComponent>();
-                    }
-                    _appVersionComponent.RemoveHotfixAppVersionConfig();
-
-                    _bundleDownloaderComponent.ClearHotfixToyDirAll();
-                }
-            }
-        }
-
-        /// <summary>
-        /// 启动强制更新
-        /// </summary>
-        public static void SetForceUpdate()
+        public static void SetLaterForceUpdate()
         {
             UnityEngine.PlayerPrefs.SetInt("__isForceUpdate", 1);
         }

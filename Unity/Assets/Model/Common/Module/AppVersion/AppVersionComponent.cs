@@ -79,7 +79,7 @@ namespace ETModel
 		}
 
 		/// <summary>
-		/// 加载本地appVersion数据
+		/// 加载 BuildIn 和 Hotfix appVersion数据
 		/// </summary>
 		/// <param name="self"></param>
 		/// <param name="url"></param>
@@ -161,7 +161,7 @@ namespace ETModel
 		/// 判断App是否需要更新
 		/// </summary>
 		/// <returns></returns>
-		public static UpdateType CensorAppNeedUpdate(this AppVersionComponent self)
+		public static UpdateType CheckAppNeedUpdate(this AppVersionComponent self)
 		{
 			if (!string.IsNullOrEmpty(UnityEngine.Application.version))
 			{
@@ -196,7 +196,7 @@ namespace ETModel
 		/// </summary>
 		/// <param name="relativePath"></param>
 		/// <returns></returns>
-		public static bool CensorToyNeedUpdate(this AppVersionComponent self, string toyDirName)
+		public static bool CheckToyNeedUpdate(this AppVersionComponent self, string toyDirName)
 		{
 			if (self.localAppVersionConfig.ToyVersionConfigs.TryGetValue(toyDirName, out ToyVersionConfig _localToyVersionConfig))
 			{
@@ -230,11 +230,11 @@ namespace ETModel
 		}
 
 		/// <summary>
-		/// 同步服务端的ToyVersion数据到本地配置
+		/// 用服务端ToyVersion配置覆盖本地ToyVersion配置
 		/// </summary>
 		/// <param name="self"></param>
 		/// <param name="toyDirName"></param>
-		public static void UpdateLocalToyVersionConfig(this AppVersionComponent self, string toyDirName)
+		public static void OverrideLocalToyVersionConfig(this AppVersionComponent self, string toyDirName)
 		{
 			if (self.serverAppVersionConfig == null || self.localAppVersionConfig == null) throw new Exception("serverAppVersionConfig or localAppVersionConfig is null");
 
@@ -242,11 +242,11 @@ namespace ETModel
 		}
 
 		/// <summary>
-		/// 拷贝服务端appVersionConfig数据到本地appVersionConfig ，但不拷贝toy数据
+		/// 用服务端appVersionConfig覆盖本地appVersionConfig ，但不拷贝toy数据
 		/// 因为app版本一致，但可能toy版本不一致，比如用户从始至终都没有打开过某个toy模块，则这个toy的信息在本地版本文件中就不存在
 		/// </summary>
 		/// <param name="self"></param>
-		public static void UpdateLocalAppVersionConfigWithOutToyVersionConfigs(this AppVersionComponent self)
+		public static void OverrideLocalAppVersionConfigWithOutToy(this AppVersionComponent self)
 		{
 			if (self.serverAppVersionConfig == null || self.localAppVersionConfig == null) throw new Exception("serverAppVersionConfig or localAppVersionConfig is null");
 
@@ -261,7 +261,7 @@ namespace ETModel
 		/// 清理到已经无用的ToyVersionConfig
 		/// </summary>
 		/// <returns></returns>
-		public static void ClearInvalidLocalToyVersionConfigs(this AppVersionComponent self)
+		public static void ClearDeprecatedLocalToyVersionConfigs(this AppVersionComponent self)
 		{
 			List<ToyVersionConfig> _list = new List<ToyVersionConfig>();
 
@@ -300,7 +300,7 @@ namespace ETModel
 		/// 获取所有本地toy配置
 		/// </summary>
 		/// <returns></returns>
-		public static ToyVersionConfig[] GetAllLocalToyVersions(this AppVersionComponent self)
+		public static ToyVersionConfig[] GetAllLocalToyVersionConfigs(this AppVersionComponent self)
 		{
 			return self.localAppVersionConfig.ToyVersionConfigs.Values.ToArray();
 		}
@@ -320,7 +320,7 @@ namespace ETModel
 		/// 保存当前本地的AppVersionConfig到Hotfix目录中
 		/// </summary>
 		/// <returns></returns>
-		public static async ETTask UpdateHotfixAppVersionConfigAsync(this AppVersionComponent self)
+		public static async ETTask SavelocalAppVersionConfigToHotfixAsync(this AppVersionComponent self)
 		{
 			//删除旧文件
 			if(File.Exists(PathHelper.HotfixAppVersionConfigPath))
@@ -339,7 +339,7 @@ namespace ETModel
 		/// <summary>
 		/// 移除本地版本文件
 		/// </summary>
-		public static void RemoveHotfixAppVersionConfig(this AppVersionComponent self)
+		public static void RemoveAppVersionConfigInHotfix(this AppVersionComponent self)
 		{
 			if (!File.Exists(PathHelper.HotfixAppVersionConfigPath))
 			{

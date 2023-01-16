@@ -38,7 +38,7 @@ namespace ETHotfix
             using (LoadSceneAsync _lsa = ETModel.ComponentFactory.Create<LoadSceneAsync>())
             {
                 await _lsa.Load("Lobby", "Lobby", UnityEngine.SceneManagement.LoadSceneMode.Additive,
-                    (lsa) => { BroadcastComponent.Instance.GetDefault().Run<int, string>(BroadcastId.ProgressMessage, lsa.g_progress, $"加载场景 Lobby {lsa.g_progress.ToString()}"); });
+                    (lsa) => { BroadcastComponent.Instance.g_default.Run<int, string>(BroadcastId.ProgressMessage, lsa.g_progress, $"加载场景 Lobby {lsa.g_progress.ToString()}"); });
             }
 
             using (LoadSceneAsync _lsa = ETModel.ComponentFactory.Create<LoadSceneAsync>())
@@ -46,7 +46,7 @@ namespace ETHotfix
                 await _lsa.UnLoad("Init");
             }
 
-            BroadcastComponent.Instance.GetDefault().Run<int, string>(BroadcastId.ProgressMessage, 0, "加载场景资源");
+            BroadcastComponent.Instance.g_default.Run<int, string>(BroadcastId.ProgressMessage, 0, "加载场景资源");
 
             Game.Scene.AddComponent<LobbyComponent>();
             //await UIComponent.Instance.OpenAsync(UIType.CommonBgPanel);

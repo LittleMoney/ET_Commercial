@@ -17,7 +17,7 @@ namespace ETModel
         public string Name;
 
         /// <summary>
-        /// 模块版本号，比较大小确定该模块资源需要不需要热更新
+        /// 模块签名，用于验证模块是否需要资源更新
         /// </summary>
         public string SignMD5;
 

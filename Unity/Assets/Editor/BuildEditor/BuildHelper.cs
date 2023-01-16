@@ -158,7 +158,7 @@ namespace ETEditor
 		}
 
 		/// <summary>
-		/// 为各模块生成文件版本列表
+		/// 为各模块生成文件版本配置文件
 		/// </summary>
 		/// <param name="buildBundlesDir"></param>
 		private static void GenerateFileVersionConfigs(string buildBundlesDir)

@@ -295,7 +295,7 @@ namespace ETHotfix
 		/// <param name="self"></param>
 		/// <param name="unit"></param>
 		/// <param name="isRemainGameObject"></param>
-		public static void Remove(this UnitComponent self, Unit unit, bool isRemainGameObject)
+		public static void Remove(this UnitComponent self, Unit unit)
 		{
 			if (!self.unitDict.TryGetValue(unit.Id, out Unit _unit)) return;
 
@@ -308,11 +308,11 @@ namespace ETHotfix
 			//谁创建谁释放
 			if (self.unitFactorys.TryGetValue(_unit.g_unitType, out IUnitFactory iFactory))
 			{
-				iFactory.Remove(_unit, isRemainGameObject);
+				iFactory.Remove(_unit);
 			}
 			else
 			{
-				self.gs_defaultUIFactory.Remove(_unit, isRemainGameObject);
+				self.gs_defaultUIFactory.Remove(_unit);
 			}
 		}
 
@@ -322,7 +322,7 @@ namespace ETHotfix
 		/// <param name="self"></param>
 		/// <param name="unit"></param>
 		/// <param name="isRemainGameObject"></param>
-		public static void Remove(this UnitComponent self, long id, bool isRemainGameObject)
+		public static void Remove(this UnitComponent self, long id)
 		{
 			if (!self.unitDict.TryGetValue(id, out Unit _unit)) return;
 
@@ -335,11 +335,11 @@ namespace ETHotfix
 			//谁创建谁释放
 			if (self.unitFactorys.TryGetValue(_unit.g_unitType, out IUnitFactory iFactory))
 			{
-				iFactory.Remove(_unit, isRemainGameObject);
+				iFactory.Remove(_unit);
 			}
 			else
 			{
-				self.gs_defaultUIFactory.Remove(_unit, isRemainGameObject);
+				self.gs_defaultUIFactory.Remove(_unit);
 			}
 		}
 

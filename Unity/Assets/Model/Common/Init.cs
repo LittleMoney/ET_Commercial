@@ -55,9 +55,6 @@ namespace ETModel
 				Game.Scene.AddComponent<ResourcesComponent>();
 				Game.Scene.AddComponent<AppVersionComponent>();
 
-				//检查核心文件
-				await HotUpdateHelper.CensorCommandCoreBundles();
-
 				//加载语言
 				Game.Scene.AddComponent<LanguageComponent>();
 				await Game.Scene.GetComponent<LanguageComponent>().LoadAsync("Common");
@@ -69,7 +66,7 @@ namespace ETModel
 				UIComponent.Instance.AddLayer(UILayerType.Pop, 6000, 20);
 				UIComponent.Instance.Open(UIType.CommonLoadingPanel);
 
-				BroadcastComponent.Instance.GetDefault().Run<int, string>(BroadcastId.ProgressMessage, 0, "启动游戏...");
+				BroadcastComponent.Instance.g_default.Run<int, string>(BroadcastId.ProgressMessage, 0, "启动游戏...");
 
 #if !UNITY_EDITOR && DEBUG
 				_global.AddComponent<Reporter>();
@@ -85,7 +82,7 @@ namespace ETModel
 					{
 						
 						bool _result = false;
-						UpdateType _updateType = await HotUpdateHelper.AppNeedUpdate();
+						UpdateType _updateType = await HotUpdateHelper.CheckAppNeedUpdate();
 
 						if (_updateType == UpdateType.Cold)
 						{
@@ -109,7 +106,7 @@ namespace ETModel
 						}
 						else
 						{
-							if (HotUpdateHelper.ToyNeedUpdate("Common"))
+							if (HotUpdateHelper.CheckToyNeedUpdate("Common"))
 							{
 								if (Application.internetReachability != NetworkReachability.ReachableViaLocalAreaNetwork)
 								{
@@ -137,7 +134,7 @@ namespace ETModel
 								//重新加载页面
 								await Game.Scene.GetComponent<LanguageComponent>().LoadAsync("Common"); 
 								UIComponent.Instance.Open(UIType.CommonLoadingPanel);
-								BroadcastComponent.Instance.GetDefault().Run<int, string>(BroadcastId.ProgressMessage, 0, "重载资源完毕...");
+								BroadcastComponent.Instance.g_default.Run<int, string>(BroadcastId.ProgressMessage, 0, "重载资源完毕...");
 							}
 						}
 					}

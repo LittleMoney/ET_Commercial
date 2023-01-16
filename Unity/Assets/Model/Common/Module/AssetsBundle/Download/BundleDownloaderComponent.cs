@@ -109,12 +109,12 @@ namespace ETModel
 		}
 
 		/// <summary>
-		/// 分析本地和服务端文件，记录需下载的文件数据
+		/// 分析热更，内嵌和服务端 资源文件配置，记录需下载的文件数据
 		/// </summary>
 		/// <param name="downloadUrl">下载的根url(注意：ulr指向文件服务器上资源包存放的根目录)</param>
 		/// <param name="toyDirName">要下载的子模块目录名</param>
 		/// <param name="forceUpdate">是否强制更新</param>
-		/// <param name="progressCallback">分析进度回调 Action( int 进度百分数 100成功，-100失败，bool 是否完毕,string 进度说明)</param>
+		/// <param name="progressCallback">进度状态回调/param>
 		/// <returns></returns>
 		public async ETTask StartAsync(string downloadUrl, string toyDirName,bool forceUpdate=false,Action<BundleDownloaderComponent> progressCallback=null)
 		{
@@ -220,12 +220,13 @@ namespace ETModel
 
 			#region 对比MD5,判断是否需要下载
 
-			FileVersionInfo _localFileVersionInfo = null;
+			FileVersionInfo _hotfixFileVersionInfo = null;
+			FileVersionInfo _buildInFileVersionInfo = null;
 			foreach (FileVersionInfo _remoteFileVersionInfo in remoteFileVersionConfig.FileInfoDict.Values)
 			{
-				if (hotfixFileVersionConfig.FileInfoDict.TryGetValue(_remoteFileVersionInfo.File, out _localFileVersionInfo))
+				if (hotfixFileVersionConfig.FileInfoDict.TryGetValue(_remoteFileVersionInfo.File, out _hotfixFileVersionInfo))
                 {
-					if (_localFileVersionInfo.SignMD5 == _remoteFileVersionInfo.SignMD5) //热更文件没有差异，跳过
+					if (_hotfixFileVersionInfo.SignMD5 == _remoteFileVersionInfo.SignMD5) //热更文件没有差异，跳过
 					{
 						continue;  
 					}
@@ -236,9 +237,9 @@ namespace ETModel
 					}
 				}
 
-				if (_buildInFileVersionConfig!=null && _buildInFileVersionConfig.FileInfoDict.TryGetValue(_remoteFileVersionInfo.File, out _localFileVersionInfo))
+				if (_buildInFileVersionConfig!=null && _buildInFileVersionConfig.FileInfoDict.TryGetValue(_remoteFileVersionInfo.File, out _buildInFileVersionInfo))
 				{
-					if (_localFileVersionInfo.SignMD5 == _remoteFileVersionInfo.SignMD5) //内嵌文件没有差异，跳过
+					if (_buildInFileVersionInfo.SignMD5 == _remoteFileVersionInfo.SignMD5) //内嵌文件没有差异，跳过
 					{
 						continue; //无需更新
 					}
@@ -250,7 +251,7 @@ namespace ETModel
 
 			#endregion
 
-			#region 清理无效的热更资源
+			#region 清理无效的热更资源文件
 
 			if (hotfixFileVersionConfig.FileInfoDict.Count == 0) //没有需要保留的热更文件，直接重建目录
 			{
@@ -273,7 +274,7 @@ namespace ETModel
 					{
 						string _relativePath = fileInfo.FullName.Substring(fileInfo.FullName.IndexOf($"{toyDirName}/") + 1);
 						if (hotfixFileVersionConfig.FileInfoDict.ContainsKey(_relativePath)) continue;
-						//if (fileInfo.Name == FileVersionConfigFileName) continue;
+
 						fileInfo.Delete();
 					}
 				}
@@ -302,7 +303,7 @@ namespace ETModel
 		{
 			if (this.g_awaitDownloadbundles.Count == 0 && this.downloadingBundle == null)
 			{
-				await UpdateHotfixFileVersionConfig();
+				await SaveHotfixFileVersionConfig();
 
 				g_progress = 100;
 				g_isDone = true;
@@ -331,6 +332,7 @@ namespace ETModel
 						//拼接下载地址
 						string _storePath = PathHelper.Combine(PathHelper.HotfixResPath, toyDirName, downloadingBundle.File);
 						string _storeDirPath = _storePath.Substring(0, _storePath.LastIndexOf("/"));
+						//创建目录
 						if (!Directory.Exists(_storeDirPath)) Directory.CreateDirectory(_storeDirPath);
 
 						try
@@ -341,7 +343,7 @@ namespace ETModel
 
 								byte[] _downloadData = _webRequest.Request.downloadHandler.data;
 								
-								if(MD5Helper.BytesMD5(_downloadData)!= downloadingBundle.SignMD5) //文件签名不一致
+								if(MD5Helper.BytesMD5(_downloadData)!= downloadingBundle.SignMD5) //下载完毕检查签名一致性
                                 {
 									throw new Exception($"download { PathHelper.Combine(toyDirName, downloadingBundle.File)} file data invalid ");
                                 }
@@ -356,7 +358,7 @@ namespace ETModel
 						}
 						catch (Exception error)
 						{
-							if (_downloadTryCount < 3)
+							if (_downloadTryCount < 3) //三次失败之内，尝试重新下载
 							{
 								_downloadTryCount++;
 								Log.Error($"download bundle error: { PathHelper.Combine(toyDirName, downloadingBundle.File)}\n{error}");
@@ -390,8 +392,8 @@ namespace ETModel
 						hotfixFileVersionConfig.FileInfoDict.Add(fvi.File, fvi);
 					}
 				}
-				//更新完毕，更新模块文件版本列表
-				await UpdateHotfixFileVersionConfig();
+				//更新完毕，更新资源文件版列表
+				await SaveHotfixFileVersionConfig();
 
 				downloadedBundles.Clear();
 				downloadingBundle = null;
@@ -410,7 +412,8 @@ namespace ETModel
                     {
 						hotfixFileVersionConfig.FileInfoDict.Add(fvi.File, fvi);
                     }
-					await UpdateHotfixFileVersionConfig();
+					//更新资源文件版列表 避免重复下载
+					await SaveHotfixFileVersionConfig();
                 }
 
 				g_error = e;
@@ -424,7 +427,7 @@ namespace ETModel
 		/// <summary>
 		/// 更新热更目录下的文件版本列表
 		/// </summary>
-		protected async ETTask UpdateHotfixFileVersionConfig()
+		protected async ETTask SaveHotfixFileVersionConfig()
 		{
 			if (hotfixFileVersionConfig == null) throw new Exception("hotfixFileVersionConfig is null");
 
@@ -447,15 +450,15 @@ namespace ETModel
 		/// <param name="toyName"></param>
 		public void ClearHotfixToyDirWithOut(string[] toyDirNames)
 		{
-			for(int i=0;i<toyDirNames.Length;i++)
-            {
-				toyDirNames[i] = toyDirNames[i].ToLower();
-            }
-
-			// 删掉已经不需要的热更文件
+			// 删掉已经不需要模块目录
 			DirectoryInfo _directoryInfo = new DirectoryInfo(PathHelper.HotfixResPath);
 			if (_directoryInfo.Exists)
 			{
+				for(int i=0;i<toyDirNames.Length;i++)
+				{
+					toyDirNames[i] = toyDirNames[i].ToLower();
+				}
+
 				DirectoryInfo[] dirInfos = _directoryInfo.GetDirectories();
 
 				bool _isHave = false;
@@ -492,9 +495,9 @@ namespace ETModel
 		}
 
 		/// <summary>
-		/// 清空所有热更模块资源
+		/// 清空热更目录
 		/// </summary>
-		public void ClearHotfixToyDirAll()
+		public void ClearHotfixDir()
         {
 			if (Directory.Exists(PathHelper.HotfixResPath))
 			{
@@ -503,90 +506,5 @@ namespace ETModel
 			}
 		}
 
-		/// <summary>
-		/// 检查热更资源包签名是否合法
-		/// </summary>
-		/// <param name="localToyMD5"></param>
-		/// <param name="path"></param>
-		public async ETTask<bool> CensorHotfixBundlesSignMD5(string[] paths)
-        {
-			Dictionary<string, List<string>> _toyAndPaths = new Dictionary<string, List<string>>();
-
-			//整理路径
-			for(int i=0;i<paths.Length;i++)
-            {
-				int _index = paths[i].IndexOf("/");
-				if (_index == -1 || _index==paths[i].Length-1) throw new Exception($"invalid bundles path {paths[i]}");
-
-				string _toyDirName = paths[i].Substring(0, _index);
-				string _bundlePath= paths[i].Substring(_index+1).ToLower();
-				if(!_toyAndPaths.TryGetValue(_toyDirName,out List<string> _bundlePathList))
-                {
-					_bundlePathList = new List<string>();
-					_toyAndPaths.Add(_toyDirName,_bundlePathList);
-				}
-				_bundlePathList.Add(_bundlePath);
-			}
-
-			foreach (KeyValuePair<string, List<string>> kv in _toyAndPaths)
-			{
-				string _bundleToyName = kv.Key.ToLower();
-
-				//模块目录不存在，则无需校验
-				if (!Directory.Exists(PathHelper.Combine(PathHelper.HotfixResPath, _bundleToyName))) continue;
-				
-				//读取热更资源表
-				FileVersionConfig _hotfixFileVersionConfig = null;
-				string _hotfixFileVersionConfigPath = PathHelper.Combine(PathHelper.HotfixResPath, _bundleToyName, FileVersionConfigFileName);
-
-				if (!File.Exists(_hotfixFileVersionConfigPath)) //没有资源表，这个模块没有热更新资源，确保资源文件不存在
-				{
-					//校验文件版本
-					for (int i = 0; i < kv.Value.Count; i++)
-					{
-						string _filePath = PathHelper.Combine(PathHelper.HotfixResPath, _bundleToyName, kv.Value[i]);
-						//没有资源表，但是实际文件存在，返回校验失败
-						if (File.Exists(_filePath)) return false;
-					}
-				}
-				else
-				{
-					using (FileStreamReadAsyncAsync _fileStreamReadAsync = ComponentFactory.Create<FileStreamReadAsyncAsync>())
-					{
-
-						await _fileStreamReadAsync.ReadAllAsync(_hotfixFileVersionConfigPath);
-						_hotfixFileVersionConfig = JsonHelper.FromJson<FileVersionConfig>(System.Text.Encoding.UTF8.GetString(_fileStreamReadAsync.datas));
-					}
-
-					//校验文件版本
-					for (int i = 0; i < kv.Value.Count; i++)
-					{
-						string _filePath = PathHelper.Combine(PathHelper.HotfixResPath, _bundleToyName, kv.Value[i]);
-
-						//资源表中没有这个文件,无需校验
-						if (!_hotfixFileVersionConfig.FileInfoDict.TryGetValue(kv.Value[i], out FileVersionInfo _fileVersionConfig))
-						{
-							//资源表没有，但是实际文件有，返回校验失败
-							if (File.Exists(_filePath)) return false;
-						}
-						else
-						{
-							//资源表中有，但是实际文件没有，返回校验失败
-							if (!File.Exists(_filePath)) return false;
-
-							using (FileStreamReadAsyncAsync _fileStreamReadAsync = ComponentFactory.Create<FileStreamReadAsyncAsync>())
-							{
-								await _fileStreamReadAsync.ReadAllAsync(_filePath);
-
-								//资源文件的实际内容和签名不一致，校验失败
-								if (_fileVersionConfig.SignMD5 != MD5Helper.BytesMD5(_fileStreamReadAsync.datas)) return false;
-							}
-						}
-					}
-				}
-			}
-
-			return true;
-		}
 	}
 }

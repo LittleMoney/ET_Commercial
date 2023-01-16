@@ -77,10 +77,10 @@ namespace ETHotfix
 		}
 
 
-		public void Remove(Unit unit, bool isRemainGameObject)
+		public void Remove(Unit unit)
 		{
 			//ETModel.Game.Scene.GetComponent<ResourcesComponent>().UnloadBundle(ui.g_uiType);
-			unit.Dispose(isRemainGameObject);
+			unit.Dispose();
 		}
 	}
 }
